@@ -15,7 +15,7 @@ class MyApp extends App {
 
   componentDidMount() {
 
-    const { userKey, treatment } = this.props.pageProps;
+    const { userKey, treatment, color_mode } = this.props.pageProps;
     // Save the treatment evaluated on server-side on the global `window` object, to use when navigating among pages on client-side.
     // You could also save it as a cookie, or in localStorage.
     if (treatment) window[FEATURE] = treatment;
@@ -37,11 +37,17 @@ class MyApp extends App {
 
   }
 
-  lightDarkMode(treatment) {
-    if(treatment == "on") {// dark mode
-      this.setState({color_mode: 'dark mode'})
-      return <div>
-        <style global jsx>{`
+
+  render() {
+    const { Component, pageProps } = this.props; //props has component and pageProps and pageProps has userKey and treatment
+    return (<Component {...pageProps} />);
+  }
+}
+
+function lightDarkMode(treatments) {
+  if(treatments.color_mode == 'on'){
+    return <div>
+      <style global jsx>{`
        h1 { 
         color : white;
         }
@@ -52,12 +58,12 @@ class MyApp extends App {
           background: black;
         }
       `}</style>
-        <h1> Dark Mode</h1></div>
-    }
-    else {// light mode
-      this.setState({color_mode: 'light mode'})
-      return <div>
-        <style global jsx>{`
+      <h1> Dark Mode</h1>
+    </div>
+  }
+  else if(treatments.color_mode == 'off'){
+    return <div>
+      <style global jsx>{`
        h1 { 
         color : black;
         }
@@ -68,13 +74,8 @@ class MyApp extends App {
           background: white;
         }
       `}</style>
-        <h1> Light Mode</h1></div>
-    }
-  }
-
-  render() {
-    const { Component, pageProps } = this.props; //props has component and pageProps and pageProps has userKey and treatment
-    return (<Component {...pageProps} />);
+      <h1> Light Mode</h1>
+    </div>
   }
 }
 
@@ -84,7 +85,8 @@ MyApp.getInitialProps = async function (appContext) {
   const splitClient = require('../../server/getServerSideSplitClient').default;
   const splitNames = ['color_mode', 'display_text', 'ask_ladder'];
   const treatments = splitClient.getTreatments(userKey, splitNames);
-  console.log(treatments, userKey);
+  let color_mode = lightDarkMode(treatments);
+  console.log(treatments.color_mode, userKey);
  // const treatment = splitClient.getTreatment(userKey, FEATURE);
 
   const treatment = 'on';
@@ -102,7 +104,7 @@ MyApp.getInitialProps = async function (appContext) {
   // }
 
   // This branch runs only on the client-side
-  return { pageProps: { treatment, userKey } }
+  return { pageProps: { treatment, userKey, color_mode} }
 };
 
 export default MyApp;
