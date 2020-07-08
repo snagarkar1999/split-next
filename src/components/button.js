@@ -2,8 +2,8 @@ import React from 'react'
 
 function Button() {
     function clickHandler() {
-        // alert('button clicked')
-        // console.log('button clicked')
+         alert('button clicked')
+        console.log('button clicked')
         split?.client().track('button');
     }
 

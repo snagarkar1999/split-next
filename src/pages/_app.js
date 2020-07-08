@@ -82,7 +82,12 @@ MyApp.getInitialProps = async function (appContext) {
  // const userKey = appContext.ctx.query.userkey || 'anonymous';
   const userKey = Math.floor(Math.random() * 1000000) + 1 ;
   const splitClient = require('../../server/getServerSideSplitClient').default;
-  const treatment = splitClient.getTreatment(userKey, FEATURE);
+  const splitNames = ['color_mode', 'display_text', 'ask_ladder'];
+  const treatments = splitClient.getTreatments(userKey, splitNames);
+  console.log(treatments, userKey);
+ // const treatment = splitClient.getTreatment(userKey, FEATURE);
+
+  const treatment = 'on';
 
   // if (appContext.ctx.req) {
   //   // This block runs only on the server-side,
