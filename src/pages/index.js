@@ -8,6 +8,7 @@ export default function Index({userKey, color_mode, display_text, ask_ladder }) 
   return (
     <div>
       <h1>Giving Pages</h1>
+        <Button />
       <p>sudo user '{userKey}' </p>
         <div> {display_text}</div>
         <div> {ask_ladder}</div>

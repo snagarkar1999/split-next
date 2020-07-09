@@ -5,21 +5,14 @@ import { FEATURE } from '../../constants'
 import Button from "../components/Button";
 
 class MyApp extends App {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     color_mode : 'light mode',
-  //     display_text : 'Please Donate',
-  //     ask_ladder : '10'
-  //   }
-  // }
 
   componentDidMount() {
 
-    const {userKey, color_mode, display_text, ask_ladder} = this.props.pageProps;
+    const {userKey, treatments } = this.props.pageProps;
     // Save the treatment evaluated on server-side on the global `window` object, to use when navigating among pages on client-side.
     // You could also save it as a cookie, or in localStorage.
-   // if (treatment) window[FEATURE] = treatment;
+   if (treatments) window[FEATURE] = treatments;
+   console.log(treatments);
 
     // Init Split on client-side
     (function () {
@@ -99,7 +92,7 @@ function displayText(treatments){
 function askLadder(treatments){
   if(treatments.ask_ladder == 'on'){
     return <div>
-      <Button />
+      {/*<Button />*/}
       {/*<button> $10 </button>*/}
       <button> $15 </button>
       <button> $20 </button>
@@ -123,16 +116,20 @@ function askLadder(treatments){
 }
 
 MyApp.getInitialProps = async function (appContext) {
-  const userKey = Math.floor(Math.random() * 1000000) + 1 ;
-  const splitClient = require('../../server/getServerSideSplitClient').default;
-  const splitNames = ['color_mode', 'display_text', 'ask_ladder'];
-  const treatments = splitClient.getTreatments(userKey, splitNames);
-  const color_mode = colorMode(treatments);
-  const display_text = displayText(treatments);
-  const ask_ladder = askLadder(treatments);
-  //console.log(treatments, userKey);
-
-  return { pageProps: {userKey, color_mode, display_text, ask_ladder} }
+  if (appContext.ctx.req) {
+    const userKey = Math.floor(Math.random() * 1000000) + 1;
+    const splitClient = require('../../server/getServerSideSplitClient').default;
+    await splitClient.ready();
+    const splitNames = ['color_mode', 'display_text', 'ask_ladder'];
+    const treatments = splitClient.getTreatments(userKey, splitNames);
+    const color_mode = colorMode(treatments);
+    const display_text = displayText(treatments);
+    const ask_ladder = askLadder(treatments);
+    //console.log(treatments, userKey);
+    return { pageProps: { treatments, userKey} };
+  }
+ // return { pageProps: {userKey, color_mode, display_text, ask_ladder} }
+    return { pageProps: { treatments: window[FEATURE], userKey } }
 };
 
 export default MyApp;
