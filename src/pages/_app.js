@@ -2,23 +2,24 @@ import React from 'react'
 import App from 'next/app'
 import { SplitFactory } from '@splitsoftware/splitio'
 import { FEATURE } from '../../constants'
+import Button from "../components/Button";
 
 class MyApp extends App {
-  constructor() {
-    super();
-    this.state = {
-      color_mode : 'light mode',
-      display_text : 'Please Donate',
-      ask_ladder : '10'
-    }
-  }
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     color_mode : 'light mode',
+  //     display_text : 'Please Donate',
+  //     ask_ladder : '10'
+  //   }
+  // }
 
   componentDidMount() {
 
-    const { userKey, treatment, color_mode } = this.props.pageProps;
+    const {userKey, color_mode, display_text, ask_ladder} = this.props.pageProps;
     // Save the treatment evaluated on server-side on the global `window` object, to use when navigating among pages on client-side.
     // You could also save it as a cookie, or in localStorage.
-    if (treatment) window[FEATURE] = treatment;
+   // if (treatment) window[FEATURE] = treatment;
 
     // Init Split on client-side
     (function () {
@@ -37,14 +38,13 @@ class MyApp extends App {
 
   }
 
-
   render() {
     const { Component, pageProps } = this.props; //props has component and pageProps and pageProps has userKey and treatment
     return (<Component {...pageProps} />);
   }
 }
 
-function lightDarkMode(treatments) {
+function colorMode(treatments) {
   if(treatments.color_mode == 'on'){
     return <div>
       <style global jsx>{`
@@ -58,7 +58,7 @@ function lightDarkMode(treatments) {
           background: black;
         }
       `}</style>
-      <h1> Dark Mode</h1>
+      <p> Dark Mode</p>
     </div>
   }
   else if(treatments.color_mode == 'off'){
@@ -74,37 +74,65 @@ function lightDarkMode(treatments) {
           background: white;
         }
       `}</style>
-      <h1> Light Mode</h1>
+      <p> Light Mode</p>
+    </div>
+  }
+  else {
+    return <div>
+      <p> Control </p>
     </div>
   }
 }
 
+function displayText(treatments){
+  if(treatments.display_text == 'on'){
+    return <h1> Please give me money!</h1>
+  }
+  else if(treatments.display_text == 'off'){
+    return <h1> Donate to a worthwhile cause </h1>
+  }
+  else{
+    return <h1> Control </h1>
+  }
+}
+
+function askLadder(treatments){
+  if(treatments.ask_ladder == 'on'){
+    return <div>
+      <Button />
+      {/*<button> $10 </button>*/}
+      <button> $15 </button>
+      <button> $20 </button>
+      <button> $40 </button>
+      <button> $80 </button>
+      <button> $150 </button>
+    </div>
+  }
+  else if(treatments.ask_ladder == 'off'){
+    return <div>
+      <button> $50 </button>
+      <button> $80 </button>
+      <button> $100 </button>
+      <button> $200 </button>
+      <button> $400 </button>
+      <button> $750 </button>
+    </div>
+  }
+  else
+    return <h1> Control </h1>
+}
+
 MyApp.getInitialProps = async function (appContext) {
- // const userKey = appContext.ctx.query.userkey || 'anonymous';
   const userKey = Math.floor(Math.random() * 1000000) + 1 ;
   const splitClient = require('../../server/getServerSideSplitClient').default;
   const splitNames = ['color_mode', 'display_text', 'ask_ladder'];
   const treatments = splitClient.getTreatments(userKey, splitNames);
-  let color_mode = lightDarkMode(treatments);
-  console.log(treatments.color_mode, userKey);
- // const treatment = splitClient.getTreatment(userKey, FEATURE);
+  const color_mode = colorMode(treatments);
+  const display_text = displayText(treatments);
+  const ask_ladder = askLadder(treatments);
+  //console.log(treatments, userKey);
 
-  const treatment = 'on';
-
-  // if (appContext.ctx.req) {
-  //   // This block runs only on the server-side,
-  //   // so run here Split SDK for Node (https://help.split.io/hc/en-us/articles/360020564931-Node-js-SDK).
-  //
-  //   await splitClient.ready();
-  //
-  //   console.log(`treatment '${treatment}' for feature '${FEATURE}' and user key '${userKey}'`);
-  //   let text = treatmentText(treatment);
-  //
-  //   return { pageProps: { treatment, userKey, text} };
-  // }
-
-  // This branch runs only on the client-side
-  return { pageProps: { treatment, userKey, color_mode} }
+  return { pageProps: {userKey, color_mode, display_text, ask_ladder} }
 };
 
 export default MyApp;
