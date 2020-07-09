@@ -15,7 +15,7 @@ export default function Index({userKey, treatments}) {
       <p>sudo user '{userKey}' </p>
         <DisplayText mode = {treatments.display_text} />
         {/*<div> {display_text}</div>*/}
-        <AskLadder mode = {treatments.ask_ladder} />
+        <AskLadder mode = {treatments.ask_ladder} userKey = {userKey} />
         {/*<div> {ask_ladder}</div>*/}
         <ColorMode mode = {treatments.color_mode} />
         {/*<p> {color_mode} </p>*/}

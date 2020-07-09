@@ -5,23 +5,22 @@ function AskLadder (props) {
     //console.log("inside ask ladder function", props);
     if(props.mode == 'on'){
         return <div>
-            {/*<Button />*/}
-            {/*<button> $10 </button>*/}
-            <button> $15 </button>
-            <button> $20 </button>
-            <button> $40 </button>
-            <button> $80 </button>
-            <button> $150 </button>
+            <Button amount = '$10' user = {props.userKey} />
+            <Button amount = '$15' user = {props.userKey} />
+            <Button amount = '$20' user = {props.userKey} />
+            <Button amount = '$40' user = {props.userKey} />
+            <Button amount = '$80' user = {props.userKey} />
+            <Button amount = '$150' user = {props.userKey} />
         </div>
     }
     else if(props.mode == 'off'){
         return <div>
-            <button> $50 </button>
-            <button> $80 </button>
-            <button> $100 </button>
-            <button> $200 </button>
-            <button> $400 </button>
-            <button> $750 </button>
+            <Button amount = '$50' user = {props.userKey} />
+            <Button amount = '$80' user = {props.userKey} />
+            <Button amount = '$100' user = {props.userKey} />
+            <Button amount = '$200' user = {props.userKey} />
+            <Button amount = '$400' user = {props.userKey} />
+            <Button amount = '$750' user = {props.userKey} />
         </div>
     }
     else

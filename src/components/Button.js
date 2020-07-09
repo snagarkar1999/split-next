@@ -1,23 +1,26 @@
-import React from 'react'
+import React, {Component} from 'react'
 
-class Button extends React.Component {
+class Button extends Component {
 
     constructor() {
         super();
-      //  this.clickHandler() = this.clickHandler().bind(this);
-        this.state= {amount: 10}
+      //this.clickHandler() = this.clickHandler().bind(this);
+        //this.state= {startingAmount : 0}
     }
 
-     clickHandler = () => {
+     clickHandler() {
        // this.setState({startingValue: 50})
         //alert('button clicked');
-        console.log('button clicked');
-        //split?.client().track('button');
-         //split?.client().track('button', {this.state.amount});
+       // console.log('button clicked');
+        split?.client().track('button');
+         //split?.client().track({this.props.user}, 'user', 'donate button', {this.props.amount});
     }
 
-    render(){
-       // return <div><button onClick = {this.clickHandler}> {state.amount} </button> </div>
+    render() {
+        return(
+            <button onClick = {() => this.clickHandler()}> {this.props.amount}</button>
+        )
+
     }
 
 }
